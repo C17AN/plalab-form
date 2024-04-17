@@ -4,7 +4,12 @@ const app = express();
 const cors = require("cors");
 const port = 5500;
 
+// CORS
 app.use(cors());
+
+// body-parser
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // 파일 저장을 위한 multer 설정
 const storage = multer.diskStorage({
@@ -18,6 +23,16 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+app.post("/login", (req, res) => {
+  // 요청 처리
+  console.log(req.body);
+  if (req.body.username !== "1004899") {
+    res.status(401).send({ message: "로그인에 실패했습니다.", code: "ERROR" });
+  } else {
+    res.send({ message: "로그인에 성공했습니다.", code: "SUCCESS" });
+  }
+});
+
 app.post("/upload", upload.single("profileImage"), (req, res) => {
   // 요청 처리
   console.log(req.file); // 업로드된 파일 정보
@@ -26,7 +41,7 @@ app.post("/upload", upload.single("profileImage"), (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send({ message: "서버" });
+  res.send({ message: "서버가 실행중입니다." });
 });
 
 app.listen(port, () => {

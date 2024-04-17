@@ -1,15 +1,21 @@
 "use client";
 
+import axios from "axios";
+import { useState } from "react";
+
 const Home = () => {
+  const [username, setUsername] = useState<string>();
+  const [password, setPassword] = useState<string>();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const formData = new FormData(event.target);
 
-    const response = await fetch("http://localhost:5500/login", {
-      method: "POST",
-      body: formData,
+    const { data } = await axios.post("http://localhost:5500/login", {
+      username,
+      password,
     });
-    const data = await response.json();
+
+    console.log(data);
   };
 
   return (
@@ -25,8 +31,9 @@ const Home = () => {
           <input
             id="username"
             className="border-slate-300 rounded-md border-solid border-2 mb-6 p-3 outline-none focus:border-slate-400 transition-all duration-300"
-            placeholder="비밀번호를 입력하세요"
-          ></input>
+            placeholder="아이디를 입력하세요"
+            onChange={(e) => setUsername(e.target.value)}
+          />
         </div>
         <div className="flex flex-col mb-6">
           <label htmlFor="password" className="mb-1">
@@ -37,7 +44,8 @@ const Home = () => {
             type="password"
             className="border-slate-300 rounded-md border-solid border-2 p-3 outline-none focus:border-slate-400 transition-all duration-300"
             placeholder="비밀번호를 입력하세요"
-          ></input>
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </div>
         <button
           type="submit"
