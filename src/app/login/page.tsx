@@ -1,11 +1,23 @@
-type Props = {};
+"use client";
 
-const Home = (props: Props) => {
-  const handleSubmit = () => {};
+const Home = () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+
+    const response = await fetch("http://localhost:5500/login", {
+      method: "POST",
+      body: formData,
+    });
+    const data = await response.json();
+  };
 
   return (
     <div className="h-full flex justify-center items-center">
-      <form className="w-3/5 h-full flex flex-col justify-center">
+      <form
+        onSubmit={handleSubmit}
+        className="w-3/5 h-full flex flex-col justify-center"
+      >
         <div className="flex flex-col">
           <label htmlFor="username" className="mb-1">
             아이디
@@ -27,7 +39,10 @@ const Home = (props: Props) => {
             placeholder="비밀번호를 입력하세요"
           ></input>
         </div>
-        <button className="shadow bg-red-300 py-2 rounded-lg hover:bg-red-400 transition-colors duration-300">
+        <button
+          type="submit"
+          className="shadow bg-red-300 py-2 rounded-lg hover:bg-red-400 transition-colors duration-300"
+        >
           제출하기
         </button>
       </form>
