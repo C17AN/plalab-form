@@ -29,7 +29,9 @@ app.post("/login", (req, res) => {
   if (req.body.username !== "1004899") {
     res.status(401).send({ message: "로그인에 실패했습니다.", code: "ERROR" });
   } else {
-    res.send({ message: "로그인에 성공했습니다.", code: "SUCCESS" });
+    setTimeout(() => {
+      res.send({ message: "로그인에 성공했습니다.", code: "SUCCESS" });
+    }, 3000);
   }
 });
 
