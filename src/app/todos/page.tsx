@@ -33,7 +33,9 @@ const TodosPage = (props: Props) => {
   return (
     <ul>
       {data?.map((todo) => (
-        <li key={todo.title}>{todo.title}</li>
+        <li className="mb-2 font-semibold" key={todo.title}>
+          {todo.title}
+        </li>
       ))}
     </ul>
   );
