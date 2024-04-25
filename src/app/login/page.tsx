@@ -1,21 +1,40 @@
 "use client";
 
 import axios from "axios";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const Home = () => {
   const [username, setUsername] = useState<string>();
   const [password, setPassword] = useState<string>();
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState();
+  const router = useRouter();
+
+  useEffect(() => {
+    setUsername(() => sessionStorage.getItem("username") || undefined);
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(() => true);
 
-    const { data } = await axios.post("http://localhost:5500/login", {
-      username,
-      password,
-    });
+    try {
+      const { data } = await axios.post("http://localhost:5500/login", {
+        username,
+        password,
+      });
+      setMessage(() => data.message);
+    } catch (e) {
+      console.log(e);
+    }
 
-    console.log(data);
+    setLoading(() => false);
+  };
+
+  const handleUsernameChange = (e: any) => {
+    setUsername(e.target.value);
+    sessionStorage.setItem("username", e.target.value);
   };
 
   return (
@@ -30,9 +49,10 @@ const Home = () => {
           </label>
           <input
             id="username"
+            value={username}
             className="border-slate-300 rounded-md border-solid border-2 mb-6 p-3 outline-none focus:border-slate-400 transition-all duration-300"
             placeholder="아이디를 입력하세요"
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={handleUsernameChange}
           />
         </div>
         <div className="flex flex-col mb-6">
@@ -47,11 +67,19 @@ const Home = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
+        <p>{message}</p>
         <button
           type="submit"
-          className="shadow bg-red-300 py-2 rounded-lg hover:bg-red-400 transition-colors duration-300"
+          className="shadow bg-red-300 mb-4 py-2 rounded-lg hover:bg-red-400 transition-colors duration-300"
         >
-          제출하기
+          {loading ? "로그인이 진행중입니다" : "제출하기"}
+        </button>
+        <button
+          onClick={() => router.push("/todos")}
+          type="submit"
+          className="shadow bg-teal-300 py-2 rounded-lg hover:bg-teal-400 transition-colors duration-300"
+        >
+          이동하기
         </button>
       </form>
     </div>
